@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSLベースカラースキーム UIデモ</title>
+  <style>
+    :root {
+      --hue: 185;
+      --sat: 100%;
+
+      --color-primary: hsl(var(--hue), var(--sat), 40%);
+      --color-secondary: hsl(var(--hue), var(--sat), 70%);
+      --color-tertiary:  hsl(var(--hue), var(--sat), 25%);
+      --color-surface:   hsl(var(--hue), 60%, 95%);
+      --color-border:    hsl(var(--hue), 40%, 80%);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      background-color: var(--color-surface);
+      margin: 0;
+    }
+
+    header {
+      background: var(--color-primary);
+      color: white;
+      padding: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .section {
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+    }
+
+    .button {
+      background-color: var(--color-primary);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+
+    .button:hover {
+      background-color: var(--color-secondary);
+    }
+
+    .button:active {
+      background-color: var(--color-tertiary);
+    }
+
+    .button-outline {
+      background: white;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+
+    .button-outline:hover {
+      background: hsl(var(--hue), var(--sat), 90%);
+    }
+
+    .button-outline:active {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .button-row {
+      margin-top: 1rem;
+    }
+
+    .record {
+      padding: 1rem;
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+    }
+
+    .record div {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    ユーザー管理画面（HSLベース設計）
+  </header>
+
+  <main>
+    <div class="section">
+      <h2>検索条件</h2>
+      <div class="form-group">
+        <label for="name">名前</label>
+        <input type="text" id="name" placeholder="例：田中 太郎">
+      </div>
+      <div class="button-row">
+        <button class="button">検索</button>
+        <button class="button-outline">条件クリア</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>検索結果（単票形式）</h2>
+      <div class="record">
+        <div><strong>名前：</strong>田中 太郎</div>
+        <div><strong>メール：</strong>tanaka@example.com</div>
+        <div><strong>所属部署：</strong>システム開発部</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>操作</h2>
+      <button class="button">登録</button>
+      <button class="button-outline">キャンセル</button>
+    </div>
+  </main>
+</body>
+</html>

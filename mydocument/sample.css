@@ -1,0 +1,63 @@
+/* =======================================
+   Webカラースキーム：プライマリカラーから導出
+   使い方：:root にプライマリを定義するだけで
+   一通りの階調が計算される設計
+   ======================================= */
+
+   :root {
+    /* 🟦 プライマリカラー（基本色）*/
+    --primary-h: 210;       /* 色相 (例: 青系) */
+    --primary-s: 100%;      /* 彩度（固定） */
+    --primary-l: 45%;       /* 明度（基準） */
+    --primary:         hsl(210, 100%, 45%);
+  
+    /* 🔹 計算で導出される階調 */
+    --primary:        hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+    --primary-light:  hsl(var(--primary-h), var(--primary-s), 85%);
+    --primary-lighter:hsl(var(--primary-h), var(--primary-s), 95%);
+    --primary-dark:   hsl(var(--primary-h), var(--primary-s), 30%);
+    --primary-darker: hsl(var(--primary-h), var(--primary-s), 20%);
+    --primary-muted:  hsl(var(--primary-h), 40%, 70%);
+  
+    /* ⚠️ アラート系 */
+    --danger:         hsl(0, 100%, 50%);
+    --warning:        hsl(45, 100%, 50%);
+    --success:        hsl(140, 80%, 40%);
+    --info:           hsl(200, 100%, 40%);
+  }
+  
+  /* 使用例 */
+  .button-primary {
+    background-color: var(--primary);
+    color: white;
+  }
+  .button-primary:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .text-muted {
+    color: var(--primary-muted);
+  }
+  
+  .bg-primary-light {
+    background-color: var(--primary-light);
+  }
+  
+  .border-primary {
+    border: 1px solid var(--primary);
+  }
+  
+  .alert-danger {
+    background-color: var(--danger);
+    color: white;
+  }
+  
+  .alert-warning {
+    background-color: var(--warning);
+    color: black;
+  }
+  
+  .alert-success {
+    background-color: var(--success);
+    color: white;
+  }
