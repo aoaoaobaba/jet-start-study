@@ -57,13 +57,5 @@ export function createPagedTable(columns, options = {}) {
       template: "{common.prev()}{common.pages()}{common.next()} 全#count#件",
     },
     select: true,
-    on: {
-      "data->onStoreUpdated": options.onPageChange
-        ? function () {
-            const id = options.onPageChange(this.getPage());
-            if (id) this.setPage(id);
-          }
-        : null,
-    },
   };
 }

@@ -10,6 +10,7 @@ export default class BaseContentView extends JetView {
       search: { query: "" },
       pagination: { page: 1, size: 5 },
     };
+    this.isLoading = false; // ループ防止フラグ
   }
 
   config() {
@@ -68,8 +69,6 @@ export default class BaseContentView extends JetView {
       }
       this.loadData();
     }
-    // view:change をコメントアウト（暴走防止）
-    // this.app.callEvent("view:change", [this]);
   }
 
   getSubViews() {
@@ -98,21 +97,26 @@ export default class BaseContentView extends JetView {
   }
 
   async loadData() {
-    if (!this.getSubViews().enableSearch) return;
-    const {
-      search: { query },
-      pagination: { page, size },
-    } = this.state;
-    const service = this.getService();
-    console.log("loadData:", {
-      table: this.table ? this.table.config.view : "undefined",
-      pager: this.pager ? this.pager.config.view : "undefined",
-    });
-    await fetchPagedData(
-      service,
-      { query, page, size },
-      this.table,
-      this.pager
-    );
+    if (!this.getSubViews().enableSearch || this.isLoading) return;
+    this.isLoading = true; // ループ防止
+    try {
+      const {
+        search: { query },
+        pagination: { page, size },
+      } = this.state;
+      const service = this.getService();
+      console.log("loadData:", {
+        table: this.table ? this.table.config.view : "undefined",
+        pager: this.pager ? this.pager.config.view : "undefined",
+      });
+      await fetchPagedData(
+        service,
+        { query, page, size },
+        this.table,
+        this.pager
+      );
+    } finally {
+      this.isLoading = false; // フラグ解除
+    }
   }
 }
