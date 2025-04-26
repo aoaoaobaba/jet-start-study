@@ -1,75 +1,69 @@
-// utils/uiComponents.js
+// sources/utils/uiComponents.js
 export function createSearchForm(onSearch, options = {}) {
   return {
-    cols: [
+    view: "form",
+    localId: "search",
+    elements: [
       {
-        view: "text",
-        localId: options.inputId || "filterInput",
-        label: options.label || "検索",
+        cols: [
+          {
+            view: "text",
+            localId: "filterInput",
+            placeholder: options.label || "検索",
+            on: {
+              onTimedKeyPress: function () {
+                onSearch(this.getValue());
+              },
+            },
+          },
+          {
+            view: "button",
+            value: "検索",
+            css: "webix_primary",
+            click: function () {
+              onSearch(this.getParentView().getChildViews()[0].getValue());
+            },
+          },
+        ],
       },
-      { view: "button", value: "検索", width: 100, click: onSearch },
     ],
   };
 }
 
-export function createControlToolbar(buttons = []) {
+export function createControlToolbar(controls) {
   return {
     view: "toolbar",
-    elements: buttons.map((btn) => ({
+    elements: controls.map((control) => ({
       view: "button",
-      localId: btn.localId,
-      value: btn.label,
-      click: btn.onClick,
+      localId: control.localId,
+      value: control.label,
+      click: control.onClick,
     })),
   };
 }
 
 export function createPagedTable(columns, options = {}) {
   return {
-    rows: [
-      {
-        view: "datatable",
-        localId: "table",
-        autoheight: true,
-        columns,
-        data: [],
-      },
-      {
-        view: "pager",
-        localId: "pager",
-        size: options.size || 5,
-        group: 1,
-        template: "全0件",
-        on: {
-          onItemClick: options.onPageChange,
-        },
-      },
-    ],
+    view: "datatable",
+    localId: "table",
+    id: "table",
+    columns,
+    pager: {
+      view: "pager",
+      localId: "pager",
+      id: "pager",
+      size: options.size || 10,
+      group: 5,
+      template: "{common.prev()}{common.pages()}{common.next()} 全#count#件",
+    },
+    select: true,
+    on: {
+      "data->onStoreUpdated": options.onPageChange
+        ? function () {
+            const id = options.onPageChange(this.getPage());
+            if (id) this.setPage(id);
+          }
+        : null,
+    },
   };
-}
-
-// utils/dataUtils.js
-export async function fetchPagedData(service, params, table, pager) {
-  try {
-    webix.ui.showProgress(table);
-    const result = await service(params);
-    table.clearAll();
-    table.parse(result.data);
-
-    const totalTemplate = `全${result.total}件`;
-    if (pager.config.template !== totalTemplate) {
-      pager.define("template", totalTemplate);
-      pager.refresh();
-    }
-    const newGroup = Math.ceil(result.total / params.size);
-    if (pager.config.group !== newGroup) {
-      pager.define("group", newGroup);
-      pager.refresh();
-    }
-  } catch (error) {
-    webix.message({ type: "error", text: "データ取得に失敗しました" });
-    console.error(error);
-  } finally {
-    webix.ui.hideProgress();
-  }
 }

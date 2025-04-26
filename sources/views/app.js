@@ -10,7 +10,7 @@ export default class AppView extends JetView {
           css: "webix_dark",
           height: 50,
           elements: [
-            { view: "label", localId: "title", width: 200 },
+            { view: "label", localId: "title", label: "My App", width: 200 },
             {
               view: "template",
               borderless: true,
@@ -26,22 +26,24 @@ export default class AppView extends JetView {
               view: "button",
               value: "ホーム",
               width: 100,
-              click: () => this.app.show("/app/top"),
+              click: () => this.app.show("/app/dummy"),
             },
           ],
         },
-        { $subview: true, name: "content" },
+        { $subview: true },
       ],
     };
   }
 
   ready() {
     this.app.attachEvent("view:change", (view) => {
+      console.log("SubView loaded:", view);
       const title = view.getSubViews
         ? view.getSubViews().title
         : "未定義の画面";
       this.$$("title").setValue(title);
     });
     this.app.attachEvent("auth:change", () => this.refresh());
+    console.log("AppView ready, subview:", this.getSubView());
   }
 }

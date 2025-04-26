@@ -31,30 +31,45 @@ export default class BaseContentView extends JetView {
       layout.push({ localId: "controls", ...subViews.controls });
     }
 
-    layout.push(
-      { view: "resizer", height: 5 },
-      { localId: "main", ...subViews.main }
-    );
+    layout.push({ view: "resizer", height: 5 }, subViews.main);
 
     return { rows: layout };
   }
 
   init() {
-    const subViews = this.getSubViews();
-    if (subViews.enableSearch) {
-      this.form = this.$$("filterInput");
-      this.table = this.$$("table");
-      if (subViews.enablePagination !== false) {
-        this.pager = this.$$("pager");
-      }
-    }
+    // 空に
   }
 
   ready() {
-    if (this.getSubViews().enableSearch) {
+    const subViews = this.getSubViews();
+    if (subViews.enableSearch) {
+      const searchView = this.getRoot().queryView({ localId: "search" });
+      this.form = searchView
+        ? searchView.queryView({ localId: "filterInput" })
+        : null;
+      this.table = this.getRoot().queryView({ localId: "table" });
+      this.pager =
+        subViews.enablePagination !== false
+          ? this.getRoot().queryView({ id: "pager" })
+          : null;
+
+      console.log("BaseContentView ready:", {
+        form: this.form ? this.form.config.view : "undefined",
+        table: this.table ? this.table.config.view : "undefined",
+        pager: this.pager ? this.pager.config.view : "undefined",
+      });
+
+      if (!this.form || !this.table) {
+        console.error("form or table is undefined");
+        return;
+      }
+      if (subViews.enablePagination !== false && !this.pager) {
+        console.warn("pager is undefined, proceeding without pagination");
+      }
       this.loadData();
     }
-    this.app.callEvent("view:change", [this]);
+    // view:change をコメントアウト（暴走防止）
+    // this.app.callEvent("view:change", [this]);
   }
 
   getSubViews() {
@@ -83,16 +98,16 @@ export default class BaseContentView extends JetView {
   }
 
   async loadData() {
-    if (
-      !this.getSubViews().enableSearch ||
-      this.getSubViews().enablePagination === false
-    )
-      return;
+    if (!this.getSubViews().enableSearch) return;
     const {
       search: { query },
       pagination: { page, size },
     } = this.state;
     const service = this.getService();
+    console.log("loadData:", {
+      table: this.table ? this.table.config.view : "undefined",
+      pager: this.pager ? this.pager.config.view : "undefined",
+    });
     await fetchPagedData(
       service,
       { query, page, size },
