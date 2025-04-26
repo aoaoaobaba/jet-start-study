@@ -10,11 +10,6 @@ export function createSearchForm(onSearch, options = {}) {
             view: "text",
             localId: "filterInput",
             placeholder: options.label || "検索",
-            on: {
-              onTimedKeyPress: function () {
-                onSearch(this.getValue());
-              },
-            },
           },
           {
             view: "button",

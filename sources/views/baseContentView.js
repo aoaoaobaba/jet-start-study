@@ -43,30 +43,16 @@ export default class BaseContentView extends JetView {
 
   ready() {
     const subViews = this.getSubViews();
+
+    // 検索する場合
     if (subViews.enableSearch) {
-      const searchView = this.getRoot().queryView({ localId: "search" });
-      this.form = searchView
-        ? searchView.queryView({ localId: "filterInput" })
-        : null;
-      this.table = this.getRoot().queryView({ localId: "table" });
+      // 検索条件
+      const searchView = this.$$("search");
+      this.form = searchView ? this.$$("filterInput") : null;
+      this.table = this.$$("table");
       this.pager =
-        subViews.enablePagination !== false
-          ? this.getRoot().queryView({ id: "pager" })
-          : null;
-
-      console.log("BaseContentView ready:", {
-        form: this.form ? this.form.config.view : "undefined",
-        table: this.table ? this.table.config.view : "undefined",
-        pager: this.pager ? this.pager.config.view : "undefined",
-      });
-
-      if (!this.form || !this.table) {
-        console.error("form or table is undefined");
-        return;
-      }
-      if (subViews.enablePagination !== false && !this.pager) {
-        console.warn("pager is undefined, proceeding without pagination");
-      }
+        subViews.enablePagination !== false ? this.table.getPager() : null;
+      // データ取得
       this.loadData();
     }
   }
@@ -80,7 +66,9 @@ export default class BaseContentView extends JetView {
   }
 
   search(query) {
-    if (!this.getSubViews().enableSearch) return;
+    if (!this.getSubViews().enableSearch) {
+      return;
+    }
     this.state.search.query = query;
     this.state.pagination.page = 1;
     this.loadData();
@@ -97,7 +85,9 @@ export default class BaseContentView extends JetView {
   }
 
   async loadData() {
-    if (!this.getSubViews().enableSearch || this.isLoading) return;
+    if (!this.getSubViews().enableSearch || this.isLoading) {
+      return;
+    }
     this.isLoading = true; // ループ防止
     try {
       const {
@@ -105,10 +95,6 @@ export default class BaseContentView extends JetView {
         pagination: { page, size },
       } = this.state;
       const service = this.getService();
-      console.log("loadData:", {
-        table: this.table ? this.table.config.view : "undefined",
-        pager: this.pager ? this.pager.config.view : "undefined",
-      });
       await fetchPagedData(
         service,
         { query, page, size },
