@@ -1,63 +1,139 @@
-.webixappstart {
-  opacity: 0;
-}
-.webixapp {
-  transition: opacity 500ms;
-  opacity: 1;
+/* ヘッダー */
+.page_header {
+  background-color: rgb(11, 62, 110);
+  color: white;
+
+  /* アプリアイコン */
+  & .app_icon *,
+  & .app_icon *:hover,
+  & .app_icon *:hover::before {
+    cursor: default;
+    background-color: unset;
+    color: white !important;
+    width: unset;
+  }
+
+  /* アプリ情報 */
+  & .app_info * {
+    font-size: 0.85rem;
+    background-color: unset;
+    color: white;
+  }
+
+  /* 画面情報 */
+  & .screen_info {
+    font-size: 1.25rem;
+    line-height: 16px;
+    background-color: unset;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 日付 */
+  & .datetime {
+    background-color: unset;
+    color: white;
+  }
+
+  /* ユーザ */
+  & .user_info {
+    display: inline-flex !important;
+    justify-content: flex-end;
+    margin-right: 12px;
+
+    /* アイコンボタン */
+    & .webix_view.webix_control.webix_el_icon * {
+      color: white;
+      &:hover {
+        color: black;
+      }
+    }
+
+    /* ユーザー名 */
+    & .webix_view.webix_control.webix_el_label {
+      width: unset !important;
+      & .webix_el_box {
+        background-color: unset !important;
+        color: white !important;
+        margin-right: 12px;
+        width: unset !important;
+      }
+    }
+  }
+
+  /* メニュー */
+  & .top_menu {
+    & .webix_list_item {
+      min-width: 100px;
+    }
+  }
 }
 
-/*data loading status*/
-.status_good,
-.status_error,
-.status_saving {
-  text-align: center;
-  margin-left: -12px;
-}
-.status_error {
-  color: red;
-}
-.status_good {
-  color: green;
+/* ユーザーメニュー */
+.user_menu {
+  background-color: rgb(240, 240, 247);
+  color: white;
+  & .webix_view {
+    background-color: unset;
+  }
 }
 
-/*login form*/
-.invalid_login .webix_header > div {
-  background: #fc3636;
-  transition: background 1s;
-}
-.invalid_login {
-  -webkit-animation: formshake 0.5s linear;
-}
-@-webkit-keyframes formshake {
-  8%,
-  41% {
-    -webkit-transform: translateX(-10px);
+/* メッセージ */
+.page_message {
+  background-color: rgb(255, 255, 255);
+  padding-left: 12px;
+
+  /* メッセージ */
+  & .webix_el_box {
+    font-size: 0.85rem;
+    vertical-align: middle;
+    display: inline;
+    line-height: 32px !important;
   }
-  25%,
-  58% {
-    -webkit-transform: translateX(10px);
+  /* アイコン */
+  &::before {
+    font-size: 1rem;
+    font-family: "Material Design Icons";
+    margin-right: 8px;
+    vertical-align: middle;
+    display: inline;
   }
-  75% {
-    -webkit-transform: translateX(-5px);
+
+  /* 通常 */
+  &.message_info {
+    & .webix_el_box {
+      color: unset;
+    }
   }
-  92% {
-    -webkit-transform: translateX(5px);
+  /* 警告 */
+  &.message_warning {
+    & .webix_el_box {
+      color: unset;
+    }
+    &::before {
+      content: "\F0026";
+      color: rgb(255, 187, 0);
+    }
   }
-  0%,
-  100% {
-    -webkit-transform: translateX(0);
+  /* エラー */
+  &.message_error {
+    & .webix_el_box {
+      color: red;
+    }
+    &::before {
+      content: "\F0026";
+      color: red;
+    }
   }
 }
-.app_header.webix_header {
-  text-align: center;
-}
-.app_layout.webix_layout_clean {
-  background: #ebedf0;
-}
-.app_start .webix_template {
-  padding: 12px 12px;
-}
-.app_menu .webix_icon {
-  font-size: 20px;
-  vertical-align: middle;
+
+/* 検索条件 */
+.webix_form.search_form {
+  /* 背景色 */
+  background-color: rgb(240, 240, 247);
+  & .webix_view {
+    background-color: unset;
+  }
 }
