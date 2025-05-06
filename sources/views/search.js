@@ -6,6 +6,8 @@ export default class SearchView extends JetView {
   static SCREEN_TITLE_KEY = "page1_title";
 
   config() {
+    const { _ } = this.app.getService("locale");
+
     // 検索条件
     const condition = {
       view: "form",
@@ -19,7 +21,7 @@ export default class SearchView extends JetView {
         labelPosition: "top",
         width: 200,
         bottomPadding: 16,
-        invalidMessage: "正しい値を入力してください",
+        invalidMessage: _("正しい値を入力してください"),
       },
       elements: [
         {
@@ -28,14 +30,14 @@ export default class SearchView extends JetView {
           cols: [
             {
               view: "text",
-              label: "タイトル",
+              label: _("タイトル"),
               width: 400,
               required: true,
               name: "search:book_name",
             },
             {
               view: "text",
-              label: "著者名",
+              label: _("著者名"),
               width: 300,
               name: "search:author",
             },
@@ -47,32 +49,32 @@ export default class SearchView extends JetView {
           cols: [
             {
               view: "text",
-              label: "出版者",
+              label: _("出版者"),
               width: 200,
               required: true,
               name: "search:publisher",
             },
             {
               view: "text",
-              label: "出版日",
+              label: _("出版日"),
               width: 200,
               name: "search:publication_year",
             },
             {
               view: "text",
-              label: "ISBN",
+              label: _("ISBN"),
               width: 200,
               name: "search:isbn",
             },
             {
               view: "text",
-              label: "資料区分",
+              label: _("資料区分"),
               width: 200,
               name: "search:div",
             },
             {
               view: "text",
-              label: "形態区分",
+              label: _("形態区分"),
               width: 200,
               required: true,
               name: "search:type",
@@ -86,26 +88,29 @@ export default class SearchView extends JetView {
             {},
             {
               view: "button",
-              value: "クリア",
+              value: _("クリア"),
               width: 100,
               click: () => {
                 const form = this.$$("searchForm");
                 form.clearValidation();
-                this.app.callEvent("message:show", ["クリアしました"]);
+                this.app.callEvent("message:show", [_("クリアしました")]);
               },
             },
             {
               view: "button",
-              value: "検索",
+              value: _("検索"),
               width: 100,
               css: "webix_primary",
               click: () => {
                 const form = this.$$("searchForm");
                 if (!form.validate()) {
-                  this.app.callEvent("message:show", ["検索条件NG!", "error"]);
+                  this.app.callEvent("message:show", [
+                    _("検索条件NG"),
+                    "error",
+                  ]);
                   return;
                 }
-                this.app.callEvent("message:show", ["検索条件OK！"]);
+                this.app.callEvent("message:show", [_("検索条件OK")]);
               },
             },
           ],
@@ -126,7 +131,7 @@ export default class SearchView extends JetView {
         labelPosition: "top",
         width: 200,
         bottomPadding: 16,
-        invalidMessage: "正しい値を入力してください",
+        invalidMessage: _("正しい値を入力してください"),
       },
       elements: [
         {
@@ -135,14 +140,14 @@ export default class SearchView extends JetView {
           cols: [
             {
               view: "text",
-              label: "タイトル",
+              label: _("タイトル"),
               width: 408,
               required: true,
               name: "search:book_name",
             },
             {
               view: "text",
-              label: "著者名",
+              label: _("著者名"),
               width: 408,
               name: "search:author",
             },
@@ -154,63 +159,63 @@ export default class SearchView extends JetView {
           cols: [
             {
               view: "text",
-              label: "出版者",
+              label: _("出版者"),
               required: true,
               name: "search:publisher",
             },
             {
               view: "text",
-              label: "出版日",
+              label: _("出版日"),
               name: "search:publication_year",
             },
             {
               view: "text",
-              label: "ISBN",
+              label: _("ISBN"),
               name: "search:isbn",
             },
             {
               view: "text",
-              label: "資料区分",
+              label: _("資料区分"),
               required: true,
               name: "search:div",
             },
             {
               view: "text",
-              label: "形態区分",
+              label: _("形態区分"),
               required: true,
               name: "search:type",
             },
             {
               view: "text",
-              label: "項目",
+              label: _("項目"),
             },
             {
               view: "text",
-              label: "項目",
+              label: _("項目"),
             },
             {
               view: "text",
-              label: "項目",
+              label: _("項目"),
             },
             {
               view: "text",
-              label: "項目",
+              label: _("項目"),
             },
             {
               view: "text",
-              label: "項目",
+              label: _("項目"),
             },
             {
               view: "text",
-              label: "項目",
+              label: _("項目"),
             },
             {
               view: "text",
-              label: "項目",
+              label: _("項目"),
             },
             {
               view: "text",
-              label: "項目",
+              label: _("項目"),
             },
           ],
         },
@@ -228,26 +233,26 @@ export default class SearchView extends JetView {
         {},
         {
           view: "button",
-          value: "キャンセル",
+          value: _("キャンセル"),
           width: 120,
           click: () => {
             const form = this.$$("mainForm");
             form.clearValidation();
-            this.app.callEvent("message:show", ["キャンセルしました"]);
+            this.app.callEvent("message:show", [_("キャンセルしました")]);
           },
         },
         {
           view: "button",
-          value: "保存",
+          value: _("保存"),
           width: 100,
           css: "webix_primary",
           click: () => {
             const form = this.$$("mainForm");
             if (!form.validate()) {
-              this.app.callEvent("message:show", ["登録NG!", "error"]);
+              this.app.callEvent("message:show", [_("登録NG"), "error"]);
               return;
             }
-            this.app.callEvent("message:show", ["登録OK！"]);
+            this.app.callEvent("message:show", [_("登録OK")]);
           },
         },
       ],
@@ -265,6 +270,7 @@ export default class SearchView extends JetView {
     //   SearchView.SCREEN_ID,
     //   _(SearchView.SCREEN_TITLE_KEY),
     // ]);
-    this.app.callEvent("screen:change", ["SAMPLE-01", "検索画面サンプル"]);
+    const { _ } = this.app.getService("locale");
+    this.app.callEvent("screen:change", ["SAMPLE-01", _("検索画面サンプル")]);
   }
 }

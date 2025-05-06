@@ -3,44 +3,21 @@ import menuData from "../models/menu.js";
 
 export default class TopView extends JetView {
   config() {
-    // ユーザメニュー
-    const userPanel = webix.ui({
-      view: "sidemenu",
-      id: "menu",
-      width: 300,
-      position: "right",
-      // modal: true,
-      state: function (state) {
-        const toolbarHeight = 64;
-        state.top = toolbarHeight;
-        state.height -= toolbarHeight;
-      },
-      css: "user_menu",
-      body: {
-        view: "list",
-        borderless: true,
-        scroll: false,
-        template: "<span class='webix_icon mdi mdi-#icon#'></span> #value#",
-        data: [
-          { id: "lang", value: "言語切替", icon: "mdi mdi-translate" },
-          { id: "logout", value: "ログアウト", icon: "mdi mdi-logout" },
-        ],
-        select: true,
-        on: {
-          onItemClick: function (id) {
-            if (id === "lang") {
-              webix.message("言語切替処理を実行");
-              // this.$scope.app.callEvent("locale:switch");
-            } else if (id === "logout") {
-              webix.message("ログアウト処理を実行");
-              // this.$scope.app.callEvent("user:logout");
-            }
-            // メニューを閉じる
-            this.getTopParentView().hide();
-          },
-        },
-      },
-    });
+    const { _ } = this.app.getService("locale");
+
+    // key → value に変換する再帰関数
+    const localize = (items) => {
+      return items.map((item) => {
+        const localized = {
+          ...item,
+          value: _(item.key),
+        };
+        if (item.submenu) {
+          localized.submenu = localize(item.submenu);
+        }
+        return localized;
+      });
+    };
 
     // ヘッダー
     const pageHeader = {
@@ -63,7 +40,7 @@ export default class TopView extends JetView {
                 },
                 {
                   view: "label",
-                  label: "サンプル管理システム",
+                  label: _("サンプル管理システム"),
                   width: 200,
                   css: "app_info",
                 },
@@ -107,7 +84,7 @@ export default class TopView extends JetView {
                   layout: "x",
                   autoWidth: true,
                   select: true,
-                  data: menuData,
+                  data: localize(menuData),
                   submenuConfig: {
                     width: 200,
                   },
@@ -125,10 +102,12 @@ export default class TopView extends JetView {
                     {
                       view: "icon",
                       icon: "wxi-user",
-                      click: function () {
-                        if (userPanel.config.hidden) {
-                          userPanel.show();
-                        } else userPanel.hide();
+                      click: () => {
+                        if (this.userMenu.config.hidden) {
+                          this.userMenu.show();
+                        } else {
+                          this.userMenu.hide();
+                        }
                       },
                     },
                     {
@@ -147,7 +126,7 @@ export default class TopView extends JetView {
             {},
             {
               view: "button",
-              label: "閉じる",
+              label: _("閉じる"),
               width: 100,
               align: "left",
               css: "webix_danger",
@@ -162,28 +141,10 @@ export default class TopView extends JetView {
     const pageMessage = {
       view: "label",
       id: "pageMessage",
-      label: "ここにメッセージが表示されます。",
+      label: _("ここにメッセージが表示されます"),
       css: "page_message",
       height: 32,
     };
-
-    // const { _, getLang, setLang } = this.app.getService("locale");
-    // const locales = {
-    //   view: "toolbar",
-    //   cols: [
-    //     { view: "button", value: _("hello"), width: 200 },
-    //     {},
-    //     {
-    //       view: "segmented",
-    //       options: ["en", "de"],
-    //       value: getLang(),
-    //       width: 200,
-    //       on: {
-    //         onChange: (value) => setLang(value),
-    //       },
-    //     },
-    //   ],
-    // };
 
     return {
       type: "clean",
@@ -198,36 +159,63 @@ export default class TopView extends JetView {
     // グローバルメニュー
     this.use(plugins.Menu, "top:menu");
 
-    // サブビューからのイベント受信：画面変更
+    // イベント受信：画面情報の変更
     this.on(this.app, "screen:change", (id, title) => {
       // 画面ID、画面タイトルの表示
       this.$$("screenInfo").setHTML(`${id}: ${title}`);
     });
 
-    // サブビューからのイベント受信：メッセージ表示
+    // イベント受信：メッセージ表示
     this.on(this.app, "message:show", (text, type = "info") => {
       this.showMessage(text, type);
     });
   }
 
   ready() {
-    // webix.ui({
-    //   view: "contextmenu",
-    //   id: "userMenu",
-    //   data: [
-    //     { id: "lang", value: "言語切り替え" },
-    //     { id: "logout", value: "ログアウト" },
-    //   ],
-    //   on: {
-    //     onMenuItemClick: (id) => {
-    //       if (id === "lang") {
-    //         webix.message("言語を切り替えます");
-    //       } else if (id === "logout") {
-    //         webix.message("ログアウトします");
-    //       }
-    //     },
-    //   },
-    // });
+    const { _ } = this.app.getService("locale");
+    // ユーザメニュー
+    this.userMenu = this.ui({
+      view: "sidemenu",
+      width: 300,
+      position: "right",
+      // modal: true,
+      state: function (state) {
+        const toolbarHeight = 64;
+        state.top = toolbarHeight;
+        state.height -= toolbarHeight;
+      },
+      css: "user_menu",
+      body: {
+        view: "list",
+        borderless: true,
+        scroll: false,
+        template: "<span class='webix_icon mdi mdi-#icon#'></span> #value#",
+        data: [
+          { id: "lang", value: _("言語切替"), icon: "mdi mdi-translate" },
+          { id: "logout", value: _("ログアウト"), icon: "mdi mdi-logout" },
+        ],
+        select: true,
+        on: {
+          onItemClick: function (id) {
+            if (id === "lang") {
+              webix.message(_("言語切替処理を実行"));
+              const { getLang, setLang } = this.$scope.app.getService("locale");
+              if (getLang() === "ja") {
+                setLang("en");
+              } else {
+                setLang("ja");
+              }
+              // this.$scope.app.callEvent("locale:switch");
+            } else if (id === "logout") {
+              webix.message(_("ログアウト処理を実行"));
+              // this.$scope.app.callEvent("user:logout");
+            }
+            // メニューを閉じる
+            this.getTopParentView().hide();
+          },
+        },
+      },
+    });
   }
 
   /**
@@ -240,13 +228,12 @@ export default class TopView extends JetView {
     // メッセージ
     label.define("label", text);
 
-    // typeとcssクラスに対応
+    // typeごとのcssクラス
     const cssMap = {
       info: "message_info",
       warning: "message_warning",
       error: "message_error",
     };
-    // typeからCSS反映
     Object.values(cssMap).forEach((cls) => {
       webix.html.removeCss(labelNode, cls);
     });
