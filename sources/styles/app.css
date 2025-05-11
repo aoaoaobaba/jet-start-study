@@ -137,3 +137,38 @@
     background-color: unset;
   }
 }
+
+/* 一覧 */
+.my_datatalbe {
+  /* 背景色 */
+  & .webix_ss_body,
+  & .webix_hs_center {
+    background-color: #d0d0d0; /* 濃い灰色 */
+  }
+
+  /* データ背景色 */
+  & .webix_cell {
+    background-color: white; /* データがあるセルの背景を白に戻す */
+  }
+}
+
+/* 一覧ページャー */
+.my_pager {
+  text-align: left;
+  padding: 8px;
+
+  & .webix_pager_item {
+    margin: 0 4px;
+    padding: 2px 6px;
+    background-color: #eee;
+    color: rgb(11, 62, 110);
+    border-radius: 4px;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  & .webix_pager_item_selected {
+    background-color: rgb(11, 62, 110);
+    color: white;
+  }
+}

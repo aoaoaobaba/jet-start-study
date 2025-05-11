@@ -21,4 +21,9 @@ export default [
       { id: "input_2", key: "確認入力", icon: "mdi mdi-pencil" },
     ],
   },
+  {
+    id: "searchList",
+    key: "一覧",
+    icon: "mdi mdi-pencil",
+  },
 ];
